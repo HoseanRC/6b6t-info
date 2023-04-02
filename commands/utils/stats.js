@@ -1,4 +1,4 @@
-import { CommandInteraction, CommandInteractionOption, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import https from "https";
 
