@@ -1,5 +1,5 @@
 import { REST, Routes } from 'discord.js';
-import { bot_id as clientId, bot_token as token, guild_id as guildId } from './config.js';
+import { bot_id as clientId, token, guild_id as guildId } from './config.js';
 import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
