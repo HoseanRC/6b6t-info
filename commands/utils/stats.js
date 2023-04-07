@@ -60,6 +60,7 @@ export async function execute(interaction) {
             interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
+                        .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.avatarURL() })
                         .setTitle(`${name}'s stats${userStats === null ? " doesn't exist!" : ""}`)
                         .setURL(`https://www.6b6t.org/stats/${name}`)
                         .setDescription(userStats === null ? `*Check if the bot is wrong:*\nhttps://www.6b6t.org/stats/${name}` : null)
@@ -87,7 +88,11 @@ export async function execute(interaction) {
                                 `Cakes Eaten - **${userStats.join}**\n` +
                                 `Golden Hoes Crafted - **${userStats.join}**\n` +
                                 `Golden Apples Eaten - **${userStats.join}**`
-                        }),
+                        })
+                        .setColor(Math.floor(Math.random() * 0x1000000))
+                        .setThumbnail(`https://minotar.net/avatar/${name}/300.png`)
+                        .setFooter({text: `Done in ${Math.floor((new Date().getMilliseconds() - interaction.createdAt.getMilliseconds()) / 10) / 100}s`})
+                        .setTimestamp(),
                 ]
             });
         });
