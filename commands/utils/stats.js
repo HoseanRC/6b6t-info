@@ -1,6 +1,7 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import https from "https";
+import { secondsToPeriod } from '../../utils';
 
 export const data = new SlashCommandBuilder()
     .setName('stats')
@@ -29,35 +30,66 @@ export async function execute(interaction) {
             ephemeral: true
         });
     }
-    https.get(`https://www.6b6t.org/stats/${name}`, function (res) {
+    https.get(`https://www.6b6t.org/_next/data/ddf2b40d01eedecbc17b4827a6c34be2d707022c/en/stats/${name}.json`, function (res) {
         let data = [];
         res.on("data", data.push);
         interaction.deferReply();
-        interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                    .setTitle(`${name}'s stats`)
-                    .setURL(`https://www.6b6t.org/stats/${name}`)
-                    .setDescription(
-                        res.on("end", async function () {
-                            let body = Buffer.concat(data).toString();
-                            let table = /<tbody>(.*?)<\/tbody>/g.exec(body)[1];
-                            let tableRows = table.match(/<tr>(.*?)<\/tr>/g);
-                            tableRows.map(function (element) {
-                                let tableColumns = element.split(/<\/?td>/g).filter(function (element) {
-                                    if (element.match(/^<\/?tr>$/g) != null) return false;
-                                    if (element.length == 0) return false;
-                                    return true;
-                                });
-                                if (tableColumns[0] == "First Played") {
-                                    tableColumns[1] += `||${Math.floor(((((Date.now() - Date.parse(tableColumns[1])) / 60) / 60) / 24) / 1000)} days ago||`;
-                                    tableColumns[1] = "At " + tableColumns[1];
-                                }
-                                return tableColumns.join(" - ");
-                            }).join("\n");
-                        })
-                    ),
-            ]
+        res.on("end", async function () {
+            /**
+             * @type {{
+             * playtime: Number,
+             * firstPlayed: Number,
+             * walk: Number,
+             * fly: Number,
+             * playerKills: Number,
+             * deaths: Number,
+             * join: Number,
+             * jumps: Number,
+             * mobKills: Number,
+             * mineNetherRack: Number,
+             * placeTNT: Number,
+             * placeEndCrystal: Number,
+             * useTotem: Number,
+             * cakeSlicesEaten: Number,
+             * timeSinceDeath: Number,
+             * goldenHoeCrafts: Number,
+             * goldenAppleEaten: Number
+             * }|null}
+             */
+            let userStats = JSON.parse(Buffer.from(data).toString()).pageProps.userStats;
+            interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle(`${name}'s stats${userStats === null ? " doesn't exist!" : ""}`)
+                        .setURL(`https://www.6b6t.org/stats/${name}`)
+                        .setDescription(userStats === null ? `*Check if the bot is wrong:*\nhttps://www.6b6t.org/stats/${name}` : null)
+                        .addFields({
+                            name: 'Important Stats',
+                            value: `Playtime - **${secondsToPeriod(userStats.playtime)}**\n` +
+                                `First Played - **At ${new Date(userStats.firstPlayed).toISOString()
+                                    .replace("-", "/").replace("T", " ").replace(/\..*$/g, "")
+                                } ||<t:${userStats.firstPlayed / 1000}:R>||**\n` +
+                                `Blocks Walked - **${userStats.walk}**\n` +
+                                `Blocks Flied - **${userStats.fly}**\n` +
+                                `Player Kills - **${userStats.playerKills}**\n` +
+                                `Deaths - **${userStats.deaths}**\n` +
+                                `Totems Popped/Used - **${userStats.useTotem} times**\n` +
+                                `TNT Placed - **${userStats.placeTNT} times**\n` +
+                                `End Crystals Placed - **${userStats.placeEndCrystal} times**\n` +
+                                `Time Since Death - **${secondsToPeriod(userStats.timeSinceDeath)}**`
+                        },
+                        {
+                            name: 'Other Stats',
+                            value: `Joined - **${userStats.join} times**\n` +
+                                `Jumped - **${userStats.join} times**\n` +
+                                `Mob Kills - **${userStats.join}**\n` +
+                                `Netherrack Mined - **${userStats.join} times**\n` +
+                                `Cakes Eaten - **${userStats.join}**\n` +
+                                `Golden Hoes Crafted - **${userStats.join}**\n` +
+                                `Golden Apples Eaten - **${userStats.join}**`
+                        }),
+                ]
+            });
         });
     });
 }
