@@ -1,0 +1,16 @@
+{
+  "name": "info-bot-6b6t",
+  "version": "0.0.1",
+  "description": "info bot for 6b6t",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "HoseanRC",
+  "license": "GPL-3.0",
+  "type": "module",
+  "dependencies": {
+    "discord.js": "^14.8.0",
+    "https": "^1.0.0"
+  }
+}
