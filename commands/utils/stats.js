@@ -74,10 +74,12 @@ export async function execute(interaction) {
                                 `Blocks Flied - **${userStats.fly}**\n` +
                                 `Player Kills - **${userStats.playerKills}**\n` +
                                 `Deaths - **${userStats.deaths}**\n` +
+                                `K/D Ratio - **${(userStats.playerKills / userStats.deaths).toFixed(2)}**\n` +
+                                `\n` +
                                 `Totems Popped/Used - **${userStats.useTotem} times**\n` +
                                 `TNT Placed - **${userStats.placeTNT} times**\n` +
                                 `End Crystals Placed - **${userStats.placeEndCrystal} times**\n` +
-                                `Time Since Death - **${secondsToPeriod(userStats.timeSinceDeath)}**`
+                                `Time Since Death - **${secondsToPeriod(userStats.timeSinceDeath / 20)}**`
                         },
                         {
                             name: 'Other Stats',
