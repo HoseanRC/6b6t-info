@@ -1,7 +1,7 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import https from "https";
-import { secondsToPeriod } from '../../utils';
+import { addPoints, secondsToPeriod } from '../../utils';
 import { getAverageColor } from 'fast-average-color-node';
 
 export const data = new SlashCommandBuilder()
@@ -71,26 +71,26 @@ export async function execute(interaction) {
                                 `First Played - **At ${new Date(userStats.firstPlayed).toISOString()
                                     .replace("-", "/").replace("T", " ").replace(/\..*$/g, "")
                                 } ||<t:${userStats.firstPlayed / 1000}:R>||**\n` +
-                                `Blocks Walked - **${userStats.walk}**\n` +
-                                `Blocks Flied - **${userStats.fly}**\n` +
-                                `Player Kills - **${userStats.playerKills}**\n` +
-                                `Deaths - **${userStats.deaths}**\n` +
-                                `K/D Ratio - **${(userStats.playerKills / userStats.deaths).toFixed(2)}**\n` +
+                                `Blocks Walked - **${addPoints(userStats.walk)}**\n` +
+                                `Blocks Flied - **${addPoints(userStats.fly)}**\n` +
+                                `Player Kills - **${addPoints(userStats.playerKills)}**\n` +
+                                `Deaths - **${addPoints(userStats.deaths)}**\n` +
+                                `K/D Ratio - **${addPoints((userStats.playerKills / userStats.deaths).toFixed(2))}**\n` +
                                 `\n` +
-                                `Totems Popped/Used - **${userStats.useTotem} times**\n` +
-                                `TNT Placed - **${userStats.placeTNT} times**\n` +
-                                `End Crystals Placed - **${userStats.placeEndCrystal} times**\n` +
-                                `Time Since Death - **${secondsToPeriod(userStats.timeSinceDeath / 20)}**`
+                                `Totems Popped/Used - **${addPoints(userStats.useTotem)} times**\n` +
+                                `TNT Placed - **${addPoints(userStats.placeTNT)} times**\n` +
+                                `End Crystals Placed - **${addPoints(userStats.placeEndCrystal)} times**\n` +
+                                `Time Since Death - **${secondsToPeriod(addPoints(userStats.timeSinceDeath / 20))}**`
                         },
                         {
                             name: 'Other Stats',
-                            value: `Joined - **${userStats.join} times**\n` +
-                                `Jumped - **${userStats.jumps} times**\n` +
-                                `Mob Kills - **${userStats.mobKills}**\n` +
-                                `Netherrack Mined - **${userStats.mineNetherRack} times**\n` +
-                                `Cakes Eaten - **${userStats.cakeSlicesEaten}**\n` +
-                                `Golden Hoes Crafted - **${userStats.goldenHoeCrafts}**\n` +
-                                `Golden Apples Eaten - **${userStats.goldenAppleEaten}**`
+                            value: `Joined - **${addPoints(userStats.join)} times**\n` +
+                                `Jumped - **${addPoints(userStats.jumps)} times**\n` +
+                                `Mob Kills - **${addPoints(userStats.mobKills)}**\n` +
+                                `Netherrack Mined - **${addPoints(userStats.mineNetherRack)} times**\n` +
+                                `Cakes Eaten - **${addPoints(userStats.cakeSlicesEaten)}**\n` +
+                                `Golden Hoes Crafted - **${addPoints(userStats.goldenHoeCrafts)}**\n` +
+                                `Golden Apples Eaten - **${addPoints(userStats.goldenAppleEaten)}**`
                         })
                         .setColor((await getAverageColor(`https://www.6b6t.org/stats/${name}`)).value.slice(0,3)/*Math.floor(Math.random() * 0x1000000)*/)
                         .setThumbnail(`https://minotar.net/avatar/${name}/300.png`)
