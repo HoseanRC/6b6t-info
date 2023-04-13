@@ -67,7 +67,7 @@ export async function execute(interaction) {
                         .setDescription(userStats === null ? `*Check if the bot is wrong:*\nhttps://www.6b6t.org/stats/${name}` : null)
                         .addFields({
                             name: 'Important Stats',
-                            value: `Playtime - **${secondsToPeriod(userStats.playtime)}**\n` +
+                            value: `Playtime - **${secondsToPeriod(userStats.playtime / 20)}**\n` +
                                 `First Played - **At ${new Date(userStats.firstPlayed).toISOString()
                                     .replace("-", "/").replace("T", " ").replace(/\..*$/g, "")
                                 } ||<t:${userStats.firstPlayed / 1000}:R>||**\n` +
