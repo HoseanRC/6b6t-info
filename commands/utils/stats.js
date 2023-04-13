@@ -85,12 +85,12 @@ export async function execute(interaction) {
                         {
                             name: 'Other Stats',
                             value: `Joined - **${userStats.join} times**\n` +
-                                `Jumped - **${userStats.join} times**\n` +
-                                `Mob Kills - **${userStats.join}**\n` +
-                                `Netherrack Mined - **${userStats.join} times**\n` +
-                                `Cakes Eaten - **${userStats.join}**\n` +
-                                `Golden Hoes Crafted - **${userStats.join}**\n` +
-                                `Golden Apples Eaten - **${userStats.join}**`
+                                `Jumped - **${userStats.jumps} times**\n` +
+                                `Mob Kills - **${userStats.mobKills}**\n` +
+                                `Netherrack Mined - **${userStats.mineNetherRack} times**\n` +
+                                `Cakes Eaten - **${userStats.cakeSlicesEaten}**\n` +
+                                `Golden Hoes Crafted - **${userStats.goldenHoeCrafts}**\n` +
+                                `Golden Apples Eaten - **${userStats.goldenAppleEaten}**`
                         })
                         .setColor((await getAverageColor(`https://www.6b6t.org/stats/${name}`)).value.slice(0,3)/*Math.floor(Math.random() * 0x1000000)*/)
                         .setThumbnail(`https://minotar.net/avatar/${name}/300.png`)
