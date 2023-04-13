@@ -92,7 +92,7 @@ export async function execute(interaction) {
                                 `Golden Hoes Crafted - **${userStats.join}**\n` +
                                 `Golden Apples Eaten - **${userStats.join}**`
                         })
-                        .setColor((await getAverageColor(`https://www.6b6t.org/stats/${name}`)).value.pop()/*Math.floor(Math.random() * 0x1000000)*/)
+                        .setColor((await getAverageColor(`https://www.6b6t.org/stats/${name}`)).value.slice(0,3)/*Math.floor(Math.random() * 0x1000000)*/)
                         .setThumbnail(`https://minotar.net/avatar/${name}/300.png`)
                         .setFooter({text: `Done in ${Math.floor((new Date().getMilliseconds() - interaction.createdAt.getMilliseconds()) / 10) / 100}s`})
                         .setTimestamp(),
