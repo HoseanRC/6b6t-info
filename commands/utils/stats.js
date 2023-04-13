@@ -8,7 +8,7 @@ export const data = new SlashCommandBuilder()
     .setName('stats')
     .setDescription('Replies with player stats.')
     .addStringOption(option =>
-        option.setName('name')
+        option.setName('Name')
             .setDescription('The player name')
             .setRequired(true));
 
@@ -16,7 +16,7 @@ export const data = new SlashCommandBuilder()
  * @param {CommandInteraction} interaction 
  */
 export async function execute(interaction) {
-    let name = `${interaction.options.getString("name")}`;
+    let name = `${interaction.options.getString("Name")}`;
     if (/^[a-zA-Z0-9_]{2,16}$/g.exec(name) == null) {
         return interaction.reply({
             embeds: [
