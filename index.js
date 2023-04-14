@@ -1,7 +1,10 @@
 import { readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const __dirname = dirname(fileURLToPath(import.meta.url));
 import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
-import { token } from './config.json';
+import config from './config.json' assert { type: 'json' };
+const token = config.token;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -15,7 +18,7 @@ for (const folder of commandFolders) {
 	const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 	for (const file of commandFiles) {
 		const filePath = join(commandsPath, file);
-		const command = require(filePath);
+		const command = await import(filePath);
 		if ('data' in command && 'execute' in command) {
 			client.commands.set(command.data.name, command);
 		} else {

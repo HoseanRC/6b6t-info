@@ -1,14 +1,14 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 
 import https from "https";
-import { addPoints, secondsToPeriod } from '../../utils';
+import { addPoints, secondsToPeriod } from '../../utils.js';
 import { getAverageColor } from 'fast-average-color-node';
 
 export const data = new SlashCommandBuilder()
     .setName('stats')
     .setDescription('Replies with player stats.')
     .addStringOption(option =>
-        option.setName('Name')
+        option.setName('name')
             .setDescription('The player name')
             .setRequired(true));
 
@@ -16,7 +16,7 @@ export const data = new SlashCommandBuilder()
  * @param {CommandInteraction} interaction 
  */
 export async function execute(interaction) {
-    let name = `${interaction.options.getString("Name")}`;
+    let name = `${interaction.options.getString("name")}`;
     if (/^[a-zA-Z0-9_]{2,16}$/g.exec(name) == null) {
         return interaction.reply({
             embeds: [
