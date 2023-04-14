@@ -19,7 +19,7 @@ export async function execute(interaction) {
     let startTime = new Date();
     let name = `${interaction.options.getString("name")}`;
     if (/^[a-zA-Z0-9_]{2,16}$/g.exec(name) == null) {
-        return interaction.reply({
+        return await interaction.reply({
             embeds: [
                 new EmbedBuilder()
                     .setAuthor({
@@ -62,7 +62,7 @@ export async function execute(interaction) {
              */
             let userStats = JSON.parse(data.toString()).pageProps.userStats;
             if (!userStats)
-                interaction.reply({
+                await interaction.reply({
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({
@@ -77,7 +77,7 @@ export async function execute(interaction) {
                     ]
                 })
             else
-                interaction.reply({
+                await interaction.reply({
                     embeds: [
                         new EmbedBuilder()
                             .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.avatarURL() })
