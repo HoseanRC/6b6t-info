@@ -1,20 +1,23 @@
 import { REST, Routes } from 'discord.js';
-import { bot_id as clientId, token, guild_id as guildId } from './config.js';
+import config from './config.json' assert { type: 'json' };
+const [clientId, token, guildId] = [config.bot_id, config.token, config.guild_id]
 import { readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const commands = [];
 // Grab all the command files from the commands directory you created earlier
-const commandsPath = join("./", 'commands');
-const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+const commandFoldersPath = join(__dirname, 'commands');
+const commandFolders = readdirSync(commandFoldersPath);
 
 // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
-for (const file of commandFiles) {
-	const commandsPath = join(foldersPath, folder);
+for (const fileFolder of commandFolders) {
+	const commandsPath = join(commandFoldersPath, fileFolder);
 	const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 	for (const file of commandFiles) {
 		const filePath = join(commandsPath, file);
-		const command = require(filePath);
+		const command = await import(filePath);
 		if ('data' in command && 'execute' in command) {
 			commands.push(command.data.toJSON());
 		} else {
