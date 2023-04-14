@@ -60,7 +60,7 @@ export async function execute(interaction) {
              * goldenAppleEaten: Number
              * }|null}
              */
-            let userStats = JSON.parse(Buffer.from(data).toString()).pageProps.userStats;
+            let userStats = JSON.parse(data.toString()).pageProps.userStats;
             if (!userStats)
                 interaction.reply({
                     embeds: [
@@ -69,6 +69,7 @@ export async function execute(interaction) {
                                 name: interaction.user.tag,
                                 iconURL: interaction.user.avatarURL()
                             })
+                            .setURL(`https://www.6b6t.org/stats/${name}`)
                             .setTitle(`No stats for ${name} found!`)
                             .setDescription("They may need to rejoin 6b6t to be tracked")
                             .setColor(0xFF0000)
