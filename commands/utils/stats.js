@@ -6,7 +6,7 @@ import { getAverageColor } from 'fast-average-color-node';
 
 export const data = new SlashCommandBuilder()
     .setName('stats')
-    .setDescription('Replies with player stats.')
+    .setDescription('See the stats of a player on 6b6t.')
     .addStringOption(option =>
         option.setName('name')
             .setDescription('The player name')

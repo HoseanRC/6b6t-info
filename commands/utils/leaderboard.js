@@ -26,7 +26,7 @@ const choices = [
 
 export const data = new SlashCommandBuilder()
     .setName('leaderboard')
-    .setDescription('Replies with 6b6t leaderboard.')
+    .setDescription('See the 6b6t leaderboards.')
     .addNumberOption(option =>
         option.setName('page')
             .setDescription('The page to show up')
