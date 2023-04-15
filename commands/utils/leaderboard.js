@@ -37,7 +37,6 @@ export const data = new SlashCommandBuilder()
  * @param {CommandInteraction | ButtonInteraction} interaction 
  */
 export async function execute(interaction) {
-    let startTime = new Date();
     if (!interaction.isButton()) {
         await interaction.deferReply();
     } else {
@@ -157,7 +156,7 @@ export async function execute(interaction) {
             }
             embed = embed
                 .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.avatarURL() })
-                .setFooter({ text: `Done in ${Math.floor((new Date() - startTime) / 10) / 100}s` })
+                .setFooter({ text: `${page == 0 ? "Main " : ''}Page${page >= 1 ? ` ${page}/16` : ''}` })
                 .setTimestamp();
             await interaction.editReply({ embeds: [embed], components: ActionRows });
         });
