@@ -1,4 +1,4 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandSubcommandGroupBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonComponent, ButtonInteraction, ButtonStyle, CommandInteraction, EmbedBuilder, SlashCommandBuilder, SlashCommandSubcommandGroupBuilder } from 'discord.js';
 
 import https from "https";
 import { addPoints, secondsToPeriod } from '../../utils.js';
@@ -34,12 +34,21 @@ export const data = new SlashCommandBuilder()
             .setChoices(...choices));
 
 /**
- * @param {CommandInteraction} interaction 
+ * @param {CommandInteraction | ButtonInteraction} interaction 
  */
 export async function execute(interaction) {
     let startTime = new Date();
-    await interaction.deferReply();
-    let page = interaction.options.getNumber("page") ?? 0;
+    if (!interaction.isButton()) {
+        await interaction.deferReply();
+    } else {
+        await interaction.deferUpdate();
+    }
+    let page;
+    if (!interaction.isButton()) {
+        page = interaction.options.getNumber("page") ?? 0;
+    } else {
+        page = parseInt(interaction.customId.replace(/\D/g, ""));
+    }
     https.get(`https://www.6b6t.org/_next/data/3178aa6f948ad9a592a38e79c7843c7d208881cd/en/stats.json`, function (res) {
         let data = "";
         res.on("data", a => { data = data.concat(a.toString()) });
@@ -66,6 +75,7 @@ export async function execute(interaction) {
              */
             let anarchyStats = JSON.parse(data.toString()).pageProps.anarchyStats;
             let embed = new EmbedBuilder();
+            let ActionRows = [];
             if (page >= 1) {
                 let info = Object.values(anarchyStats)[page - 1];
                 embed = embed
@@ -74,9 +84,43 @@ export async function execute(interaction) {
                     .setColor((await getAverageColor(`https://minotar.net/avatar/${info[0].name}/300.png`)).value.slice(0, 3))
                     .setDescription(
                         info.reduce((value, playerInfo, index, array) => `${value}#${index + 1} | \`${playerInfo.name}\` - **${[1, 14].includes(page) ? secondsToPeriod(playerInfo.value / 20) :
-                                [6, 7, 9, 10, 11, 12].includes(page) ? `${addPoints(playerInfo.value)} times` :
-                                    addPoints(playerInfo.value)
+                            [6, 7, 9, 10, 11, 12].includes(page) ? `${addPoints(playerInfo.value)} times` :
+                                addPoints(playerInfo.value)
                             }**${array.length - 1 == index ? "" : "\n"}`, ""));
+                ActionRows[0] = new ActionRowBuilder()
+                    .addComponents(
+                        new ButtonBuilder()
+                            .setLabel("Previous Page")
+                            .setEmoji('◀️')
+                            .setCustomId(`leaderboard-page${page - 1 == 0 ? 16 : page - 1}`)
+                            .setStyle(ButtonStyle.Secondary),
+                        new ButtonBuilder()
+                            .setLabel("Main Page")
+                            .setEmoji('📝')
+                            .setCustomId(`leaderboard-page0`)
+                            .setDisabled(page == 0)
+                            .setStyle(ButtonStyle.Primary),
+                        new ButtonBuilder()
+                            .setLabel("Next Page")
+                            .setEmoji('▶️')
+                            .setCustomId(`leaderboard-page${page + 1 == 17 ? 1 : page + 1}`)
+                            .setStyle(ButtonStyle.Secondary),
+                    );
+                ActionRows[1] = new ActionRowBuilder()
+                    .addComponents(
+                        new ButtonBuilder()
+                            .setLabel("First Page")
+                            .setEmoji('⏪')
+                            .setCustomId(`leaderboard-page1x`)
+                            .setDisabled(page == 1)
+                            .setStyle(ButtonStyle.Success),
+                        new ButtonBuilder()
+                            .setLabel("Last Page")
+                            .setEmoji('⏩')
+                            .setCustomId(`leaderboard-page16x`)
+                            .setDisabled(page == 16)
+                            .setStyle(ButtonStyle.Success),
+                    );
             } else {
                 embed = embed
                     .setTitle("Leaderboards")
@@ -91,12 +135,31 @@ export async function execute(interaction) {
                                     addPoints(Object.values(anarchyStats)[info.value - 1][0].value)}**`
                         }]
                     }));
+                ActionRows[0] = new ActionRowBuilder()
+                    .addComponents(
+                        new ButtonBuilder()
+                            .setLabel("First Page")
+                            .setEmoji('◀️')
+                            .setCustomId(`leaderboard-page1`)
+                            .setStyle(ButtonStyle.Secondary),
+                        new ButtonBuilder()
+                            .setLabel("Main Page")
+                            .setEmoji('📝')
+                            .setCustomId(`leaderboard-page0`)
+                            .setDisabled(page == 0)
+                            .setStyle(ButtonStyle.Primary),
+                        new ButtonBuilder()
+                            .setLabel("Last Page")
+                            .setEmoji('▶️')
+                            .setCustomId(`leaderboard-page16`)
+                            .setStyle(ButtonStyle.Secondary),
+                    );
             }
             embed = embed
                 .setAuthor({ name: interaction.user.tag, iconURL: interaction.user.avatarURL() })
                 .setFooter({ text: `Done in ${Math.floor((new Date() - startTime) / 10) / 100}s` })
                 .setTimestamp();
-            await interaction.editReply({ embeds: [embed] });
+            await interaction.editReply({ embeds: [embed], components: ActionRows });
         });
     });
 }
