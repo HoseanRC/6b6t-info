@@ -16,7 +16,7 @@ for (const fileFolder of commandFolders) {
 	const commandsPath = join(commandFoldersPath, fileFolder);
 	const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 	for (const file of commandFiles) {
-		const filePath = join(commandsPath, file);
+		const filePath = join("file://", commandsPath, file);
 		const command = await import(filePath);
 		if ('data' in command && 'execute' in command) {
 			commands.push(command.data.toJSON());

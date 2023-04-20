@@ -17,7 +17,7 @@ for (const folder of commandFolders) {
 	const commandsPath = join(commandFoldersPath, folder);
 	const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 	for (const file of commandFiles) {
-		const filePath = join(commandsPath, file);
+		const filePath = join("file://", commandsPath, file);
 		const command = await import(filePath);
 		if ('data' in command && 'execute' in command) {
 			client.commands.set(command.data.name, command);
@@ -31,7 +31,7 @@ client.buttons = new Collection();
 const buttonsPath = join(__dirname, 'buttons');
 const buttonFiles = readdirSync(buttonsPath);
 for (const file of buttonFiles) {
-	const filePath = join(buttonsPath, file);
+	const filePath = join("file://", buttonsPath, file);
 	const button = await import(filePath);
 	if ('data' in button && 'execute' in button) {
 		client.buttons.set(button.data.match, button);
